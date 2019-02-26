@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Quote Dashboard</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'quotedashapp/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'quotedashapp/bootstrap.min.css' %}">
+    <script src="{% static 'quotedashapp/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'quotedashapp/bootstrap.min.js' %}"></script>
+</head>
+<body>
+<div id="topnav">
+    <div id="welcome">
+        Welcome {{ request.session.firstname }} {{ request.session.lastname }}!
+    </div>
+    {% if request.session.id %}
+    <div id="navright"><a href="/editaccount">Edit My Account</a>
+        <form action="/logout" method="POST">{% csrf_token %}<input type="submit" value="Logout"></input></form>
+    </div>
+    {% endif %}
+    {% if not request.session.id %}
+    <a href="/">Log In</a>
+    {% endif %}
+</div>
+<div id="wrapper">
+    <div id="quotes">
+        {% for quote in quotes %}
+        <div class="quotebox">
+            <div class="quotetext">
+                {{ quote.author }}: "{{ quote.quote }}"
+            </div>
+            <div class="quoteauthor">
+                Posted by <a href="/user/{{ quote.email.id }}">{{ quote.email.first_name }} {{ quote.email.last_name }}</a>
+            </div>
+            <div class="quoteunder">
+            </div>
+            <div class="quotedelete">
+            {% if quote.email.id == request.session.id %}
+            <form action="/delete" method="POST">{% csrf_token %}<input type="hidden" name="quoteid" value={{ quote.id }}><input type="submit" value="Delete"></form>
+            {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div id="addquote">
+        <h2>Add a Quote!</h2>
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+        <form action="/addquote" id="iaddquote" method="POST">
+            {% csrf_token %}
+        Author <input type="text" name="author"><br>
+        Quote <textarea cols=50 rows=4 form="iaddquote" name="quote"></textarea><br>
+        {% if request.session.id %}
+        <input type="submit" value="Submit">
+        {% endif %}
+        {% if not request.session.id %}
+        <a href="/">Log In!!</a>
+        {% endif %}
+    </form>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>The Wishing App</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'wishapp/reset.css' %}">
+    <link rel="stylesheet" href="{% static 'wishapp/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'wishapp/bootstrap.min.css' %}">
+    <script src="{% static 'wishapp/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'wishapp/bootstrap.min.js' %}"></script>
+</head>
+<body>
+<div id="wrapper">
+    <div id="topnav">
+        <div id="welcome">
+            <h3>Hello {{ request.session.firstname }}! Make a wish!</h3>
+        </div>
+        {% if request.session.id %}
+        <div id="navright"><form action="/logout" method="POST">{% csrf_token %}<input type="submit" value="Logout"></input></form>
+        </div>
+        {% endif %}
+        {% if not request.session.id %}
+        <a href="/">Log In</a>
+        {% endif %}
+    </div><!-- end topnav-->
+<div id="content">
+    {% for message in messages %}
+        {{ message }}
+    {% endfor %}
+    <div class="wishesbox">
+        <form action="/wishes/addwish" method="POST">
+        {% csrf_token %}
+        I wish for: <input type="text" name="wish"><br>
+        Description: <input type="text" name="desc"><br>
+        <a href="/wishes"><button form = "">Cancel</button></a><input type="submit" value="Submit">
+        </form>
+    </div>
+</div>
+</div>
+</body>
+</html>

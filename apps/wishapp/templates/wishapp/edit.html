@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>The Wishing App</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'wishapp/reset.css' %}">
+    <link rel="stylesheet" href="{% static 'wishapp/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'wishapp/bootstrap.min.css' %}">
+    <script src="{% static 'wishapp/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'wishapp/bootstrap.min.js' %}"></script>
+</head>
+<body>
+<div id="wrapper">
+    <div id="topnav">
+        <div id="welcome">
+            <h3>Hello {{ request.session.firstname }}! Let's edit your wish!</h3>
+        </div>
+        {% if request.session.id %}
+        <div id="navright"><form action="/logout" method="POST">{% csrf_token %}<input type="submit" value="Logout"></input></form>
+        </div>
+        {% endif %}
+        {% if not request.session.id %}
+        <a href="/">Log In</a>
+        {% endif %}
+    </div><!-- end topnav-->
+<div id="content">
+    {% for message in messages %}
+        {{ message }}
+    {% endfor %}
+    <div class="wishesbox">
+        <form action="/update" method="POST">
+        {% csrf_token %}
+        I wish for: <input type="text" name="wish" value={{ wish.wishtitle }}><br>
+        Description: <input type="text" name="desc" value={{ wish.wishdesc }}><br>
+        <input type="hidden" name="wishid", value={{ wish.id }}>
+        <a href="/wishes"><button form="">Cancel</button></a><input type="submit" value="Edit">
+        </form>
+    </div>
+</div>
+</div>
+</body>
+</html>

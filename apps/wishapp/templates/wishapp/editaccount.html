@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>User Quotes</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'wishapp/reset.css' %}">
+    <link rel="stylesheet" href="{% static 'quotedashapp/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'quotedashapp/bootstrap.min.css' %}">
+    <script src="{% static 'quotedashapp/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'quotedashapp/bootstrap.min.js' %}"></script>
+</head>
+<body>
+<div id="topnav">
+    <div id="welcome">
+        Welcome {{ request.session.firstname }} {{ request.session.lastname }}!
+    </div>
+    <div id="navright"><a href="/editaccount">Edit My Account</a>
+        <form action="/logout" method="POST">{% csrf_token %}<input type="submit" value="Logout"></input></form>
+        <a href="/quotes">Go Back</a> 
+    </div>
+</div>
+    <div id="wrapper">
+        <div id="quotes">
+            <h3>Edit My Account</h3>
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+            <form action="/updateaccount" method="POST">
+            {% csrf_token %}
+            First Name <input type="text" name="firstname" value={{ account.first_name }}><br>
+            Last Name <input type="text" name="lastname" value={{ account.last_name }}><br>
+            Email <input type="text" name="email" value={{ account.email }}><br>
+            <input type="submit" value="Submit">
+            </form>
+            </div>
+            <div id="addquote">
+                
+            </div>
+        </div>
+    </div>
+</body>
+</html>

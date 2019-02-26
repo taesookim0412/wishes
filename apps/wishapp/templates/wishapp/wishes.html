@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>The Wishing App</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'wishapp/reset.css' %}">
+    <link rel="stylesheet" href="{% static 'wishapp/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'wishapp/bootstrap.min.css' %}">
+    <script src="{% static 'wishapp/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'wishapp/bootstrap.min.js' %}"></script>
+</head>
+<body>
+<div id="wrapper">
+    <div id="topnav">
+        <div id="welcome">
+            <h3>Hello {{ request.session.firstname }}!</h3>
+        </div>
+        {% if request.session.id %}
+        <div id="navright"><form action="/logout" method="POST">{% csrf_token %}<input type="submit" value="Logout"></input></form>
+            <a href="/wishes/stats"><button>View your stats!</button></a>
+            <a href="/wishes/new"><button>Make a Wish!</button></a>
+        </div>
+        {% endif %}
+        {% if not request.session.id %}
+        <a href="/">Log In</a>
+        {% endif %}
+    </div><!-- end topnav-->
+    <div class="wishestop">Your wish list:</div>
+    <div class="bigwishes">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <th scope="col">Item</th>
+                <th scope="col">Date Added</th>
+                <th scope="col">Actions</th>
+            </thead>
+            <tbody>
+            <div class="linkbutton">
+                {% for wish in wishes %}
+                <tr>
+                    <td>{{ wish.wishtitle }}</td>
+                    <td>{{ wish.dateadded }}</td>
+                    <td><form action="/wishes/remove" method="POST">{% csrf_token %}
+                        <input type="hidden" name="wishid" value={{ wish.id }}>
+                        <input type="submit" value="Remove"></form> 
+                        <a href="/wishes/edit/{{ wish.id }}"><button>Edit</button></a> 
+
+                        <form action="/wishes/addgrant" method="POST">{% csrf_token %}
+                        <input type="hidden" name="wishid" value={{ wish.id }}>
+                        <input type="submit" value="Granted!"></form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </div>
+            </tbody>
+        </table>
+        <div class="wishestop">Granted wishes:</div>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <th scope="col">Item</th>
+                <th scope="col">Wisher</th>
+                <th scope="col">Date Added</th>
+                <th scope="col">Date Granted</th>
+                <th scope="col">Likes</th>
+                <th scope="col">Actions</th>
+            </thead>
+            <tbody>
+                {% for grants in grantedwishes %}
+                <tr>
+                    <td>{{ grants.wishtitle }}</td>
+                    <td>{{ grants.wisher }}</td>
+                    <td>{{ grants.dateadded }}</td>
+                    <td>{{ grants.dategranted }}</td>
+                    <td>{{ grants.likes }}</td>
+                    <td> <form action="/wishes/addlike" method="POST">{% csrf_token %}<input type="hidden" name="grantid" value={{ grants.id }}><input type="submit" value="Like"></form></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div><!-- end wishes-->
+</div>
+</body>
+</html>

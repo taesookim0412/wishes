@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>The Wishing App</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'wishapp/reset.css' %}">
+    <link rel="stylesheet" href="{% static 'wishapp/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'wishapp/bootstrap.min.css' %}">
+    <script src="{% static 'wishapp/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'wishapp/bootstrap.min.js' %}"></script>
+</head>
+<body>
+<div id="wrapper">
+    <div id="topnav">
+        <div id="welcome">
+            <h3>Hello {{ request.session.firstname }}! Here are your stats!</h3>
+        </div>
+        {% if request.session.id %}
+        <div id="navright">
+            <button><a href="/wishes">Dashboard</a></button>
+            <form action="/logout" method="POST">{% csrf_token %}<input type="submit" value="Logout"></input></form>
+        </div>
+        {% endif %}
+        {% if not request.session.id %}
+        <a href="/">Log In</a>
+        {% endif %}
+    </div><!-- end topnav-->
+<div id="content">
+    <div class="wishesbox">
+        Total wishes granted so far for all users: {{ grantedtotal }} <br>
+        Your granted wishes: {{ granted }} <br>
+        Your pending wishes:  {{ grantedpending }}<br>
+        <a href="/wishes"><button form = "">Cancel</button></a><input type="submit" value="Submit">
+        </form>
+    </div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>User Quotes</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'quotedashapp/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'quotedashapp/bootstrap.min.css' %}">
+    <script src="{% static 'quotedashapp/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'quotedashapp/bootstrap.min.js' %}"></script>
+</head>
+<body>
+    <div id="wrapper">
+        <div id="quotes">
+            <h3>{{ account.first_name }} {{ account.last_name }}'s Quotes</h3>
+            {% for quote in quotes %}
+            <div class="quotebox">
+                <div class="quotetext">
+                    {{ quote.author }}: "{{ quote.quote }}"
+                </div>
+                <div class="quoteauthor">
+                    Posted by <a href="/user/{{ quote.email.id }}">{{ quote.email.first_name }} {{ quote.email.last_name }}</a>
+                </div>
+                <div class="quoteunder">
+                </div>
+                <div class="quotedelete">
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div id="addquote"></div>
+    </div>
+</body>
+</html>
